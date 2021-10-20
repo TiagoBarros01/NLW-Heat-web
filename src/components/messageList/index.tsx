@@ -3,14 +3,7 @@ import styles from './styles.module.scss';
 import logoImg from '../../assets/logo.svg';
 import { api } from '../../services/api';
 import { useEffect, useState } from 'react';
-
-interface IUser {
-  avatar_url: string;
-  github_id: number;
-  id: string;
-  login: string;
-  name: string;
-}
+import { IUser } from '../../@types/User';
 
 interface IMessage {
   created_at: string;
