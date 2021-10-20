@@ -3,11 +3,11 @@ import { useAuth } from '../../contexts/auth';
 import styles from './styles.module.scss';
 
 export const SendMessageForm = (): JSX.Element => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   return (
     <div className={styles.sendMessageFormWrapper}>
-      <button className={styles.signOutButton}>
+      <button onClick={signOut} className={styles.signOutButton}>
         <VscSignOut size="32" />
       </button>
 

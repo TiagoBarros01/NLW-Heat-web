@@ -36,7 +36,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const signOut = () => {
     setUser(null);
-    localStorage.removeItem('DoWhile:authToken');
+    localStorage.removeItem('@DoWhile:authToken');
   }
 
   useEffect(() => {
