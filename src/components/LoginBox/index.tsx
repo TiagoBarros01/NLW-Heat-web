@@ -1,44 +1,12 @@
 import styles from './styles.module.scss';
 import { VscGithubInverted } from 'react-icons/vsc';
-import { useEffect } from 'react';
-import { api } from '../../services/api';
 import { IUser } from '../../@types/User';
-
-interface IAuthResponse {
-  token: string;
-  user: IUser;
-}
+import { useAuth } from '../../contexts/auth';
 
 export const LoginBox = (): JSX.Element => {
-  const signInUrl = `https://github.com/login/oauth/authorize?scope=user&client_id=edcb8c77ba41a6ce5910`;
+  const { signInUrl, user } = useAuth();
 
-  const signIn = async (githubCode: string) => {
-    const response = await api.post<IAuthResponse>('authenticate', {
-      code: githubCode,
-    });
-
-    const { token, user } = response.data;
-
-    localStorage.setItem('@DoWhile:authToken', token);
-
-    console.log(user);
-  };
-
-  useEffect(() => {
-    const URL = window.location.href;
-    const hasGithubCode = URL.includes('?code=');
-
-    if (!hasGithubCode) {
-      console.log('Você nã está autenticado');
-      return;
-    }
-
-    const [urlWithoutCode, githubCode] = URL.split('?code=');
-
-    window.history.pushState({}, '', urlWithoutCode);
-
-    signIn(githubCode);
-  }, []);
+  console.log({ user });
 
   return (
     <div className={styles.loginBoxWrapper}>
