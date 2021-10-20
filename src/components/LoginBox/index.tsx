@@ -1,12 +1,9 @@
 import styles from './styles.module.scss';
 import { VscGithubInverted } from 'react-icons/vsc';
-import { IUser } from '../../@types/User';
 import { useAuth } from '../../contexts/auth';
 
 export const LoginBox = (): JSX.Element => {
-  const { signInUrl, user } = useAuth();
-
-  console.log({ user });
+  const { signInUrl } = useAuth();
 
   return (
     <div className={styles.loginBoxWrapper}>
