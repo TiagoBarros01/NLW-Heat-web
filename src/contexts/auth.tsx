@@ -5,6 +5,7 @@ import { api } from '../services/api';
 interface IAuthContextData {
   user: IUser | null;
   signInUrl: string;
+  signOut(): void;
 }
 
 interface IAuthResponse {
@@ -32,6 +33,11 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     setUser(user);
   };
+
+  const signOut = () => {
+    setUser(null);
+    localStorage.removeItem('DoWhile:authToken');
+  }
 
   useEffect(() => {
     (async () => {
@@ -69,6 +75,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   return (
     <AuthContext.Provider
       value={{
+        signOut,
         signInUrl,
         user,
       }}
