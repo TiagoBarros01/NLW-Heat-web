@@ -1,60 +1,56 @@
 import styles from './styles.module.scss';
 
 import logoImg from '../../assets/logo.svg';
+import { api } from '../../services/api';
+import { useEffect, useState } from 'react';
+
+interface IUser {
+  avatar_url: string;
+  github_id: number;
+  id: string;
+  login: string;
+  name: string;
+}
+
+interface IMessage {
+  created_at: string;
+  id: string;
+  message: string;
+  user_id: string;
+  user: IUser;
+}
 
 export const MessageList = (): JSX.Element => {
+  const [messages, setMessages] = useState<IMessage[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await api.get<IMessage[]>('messages/last-three');
+
+      setMessages(data);
+    })();
+    try {
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
   return (
     <div className={styles.messageListWrapper}>
       <img src={logoImg} alt="DoWhile2021" />
 
       <ul className={styles.messageList}>
-        <li className={styles.message}>
-          <p className={styles.messageContent}>
-            Não vejo a hora de começar o evento, com certeza vau ser o melhor de
-            todos os tempos, vamoo pra cima! 🔥🔥
-          </p>
-          <div className={styles.messageUser}>
-            <div className={styles.userImage}>
-              <img
-                src="https://github.com/tiagobarros01.png"
-                alt="Tiago Barros"
-              />
+        {messages.map((message) => (
+          <li key={message.id} className={styles.message}>
+            <p className={styles.messageContent}>{message.message}</p>
+            <div className={styles.messageUser}>
+              <div className={styles.userImage}>
+                <img src={message.user.avatar_url} alt={message.user.name} />
+              </div>
+              <span>{message.user.name}</span>
             </div>
-            <span>Diego Fernandes</span>
-          </div>
-        </li>
-
-        <li className={styles.message}>
-          <p className={styles.messageContent}>
-            Não vejo a hora de começar o evento, com certeza vau ser o melhor de
-            todos os tempos, vamoo pra cima! 🔥🔥
-          </p>
-          <div className={styles.messageUser}>
-            <div className={styles.userImage}>
-              <img
-                src="https://github.com/tiagobarros01.png"
-                alt="Tiago Barros"
-              />
-            </div>
-            <span>Diego Fernandes</span>
-          </div>
-        </li>
-
-        <li className={styles.message}>
-          <p className={styles.messageContent}>
-            Não vejo a hora de começar o evento, com certeza vau ser o melhor de
-            todos os tempos, vamoo pra cima! 🔥🔥
-          </p>
-          <div className={styles.messageUser}>
-            <div className={styles.userImage}>
-              <img
-                src="https://github.com/tiagobarros01.png"
-                alt="Tiago Barros"
-              />
-            </div>
-            <span>Diego Fernandes</span>
-          </div>
-        </li>
+          </li>
+        ))}
       </ul>
     </div>
   );
