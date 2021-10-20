@@ -30,6 +30,8 @@ export const AuthProvider: React.FC = ({ children }) => {
     const { token, user } = response.data;
 
     localStorage.setItem('@DoWhile:authToken', token);
+    
+    api.defaults.headers.common.authorization = `Bearer ${token}`;
 
     setUser(user);
   };

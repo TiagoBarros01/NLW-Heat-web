@@ -1,9 +1,29 @@
+import { FormEvent, useRef } from 'react';
 import { VscGithubInverted, VscSignOut } from 'react-icons/vsc';
 import { useAuth } from '../../contexts/auth';
+import { api } from '../../services/api';
 import styles from './styles.module.scss';
 
 export const SendMessageForm = (): JSX.Element => {
   const { user, signOut } = useAuth();
+
+  const messageRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!messageRef.current?.value.trim()) {
+      console.log("Message doesn't be empty ");
+      return;
+    }
+
+    await api.post('messages', {
+      message: messageRef.current?.value
+    })
+
+    messageRef.current.value = ''
+
+  }
 
   return (
     <div className={styles.sendMessageFormWrapper}>
@@ -24,9 +44,10 @@ export const SendMessageForm = (): JSX.Element => {
         </span>
       </header>
 
-      <form action="" className={styles.sendMessageForm}>
+      <form onSubmit={(event) => handleSubmit(event)} className={styles.sendMessageForm}>
         <label htmlFor="message">Mensagem</label>
         <textarea
+          ref={messageRef}
           placeholder="Qual sua expectativa para o evento?"
           name="message"
           id="message"
