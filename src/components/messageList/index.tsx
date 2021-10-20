@@ -4,6 +4,7 @@ import logoImg from '../../assets/logo.svg';
 import { api } from '../../services/api';
 import { useEffect, useState } from 'react';
 import { IUser } from '../../@types/User';
+import { io } from 'socket.io-client';
 
 interface IMessage {
   created_at: string;
@@ -12,6 +13,14 @@ interface IMessage {
   user_id: string;
   user: IUser;
 }
+
+const messageQueue: IMessage[] = [];
+
+const socket = io('http://localhost:4000');
+
+socket.on('new_message', (newMessage: IMessage) => {
+  messageQueue.push(newMessage);
+});
 
 export const MessageList = (): JSX.Element => {
   const [messages, setMessages] = useState<IMessage[]>([]);
@@ -26,6 +35,18 @@ export const MessageList = (): JSX.Element => {
     } catch (err) {
       console.log(err);
     }
+  }, []);
+
+  useEffect(() => {
+    setInterval(() => {
+      if (messageQueue.length > 0) {
+        setMessages((prevState) =>
+          [messageQueue[0], prevState[0], prevState[1]].filter(Boolean)
+        );
+
+        messageQueue.shift();
+      }
+    }, 2000);
   }, []);
 
   return (
